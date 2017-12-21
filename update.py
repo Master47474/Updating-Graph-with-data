@@ -2,23 +2,35 @@ import urllib
 from stripogram import html2text
 from time import sleep
 
+URL_EOS_BTC = "https://min-api.cryptocompare.com/data/price?fsym=EOS&tsyms=BTC" # EOS to bitcoin
+URL_BTC_USD = "https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD" # Bitcoin to Usd
+URL_XLM_BTC ="https://min-api.cryptocompare.com/data/price?fsym=XLM&tsyms=BTC" #Stellar to Bitcoin
+
 # change x < 5 to True if want to last forever
 def updateinfo():
     x = 0
-    while x < 5:
-        sleep(5)
-        File = open("filen.txt","a")
-        myurl = urllib.urlopen("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD,EUR&e=Coinbase&extraParams=your_app_name")
+    while x < 25:
+        sleep(1)
+        #BTC to Usd First
+        File = open("fileBtcUsd.txt","a")
+        myurl = urllib.urlopen(URL_BTC_USD)
         html_string = myurl.read()
         text = html2text(html_string).strip("{}")
-        splitText = text.split(",")[0].split(":")
-        splitText[0] = 1 + x #splitText[0].strip("\"\"")
-        #splitText[0] = splitText[0].strip("\'\'")
-        splitText[1] = float(splitText[1]) - (x**5)
-        """ doing the - x**10 to see if how it looks when it drastcially changes """
-        print splitText
+        splitText = text.split(":")
+        splitText[0] = 1 + x
+        splitText[1] = float(splitText[1])
+        File.write("\n%s" % str(splitText).strip("[]"))
+        File.close()
+        File = open("fileEosBtc.txt","a")
+        myurl = urllib.urlopen(URL_EOS_BTC)
+        html_string = myurl.read()
+        text = html2text(html_string).strip("{}")
+        splitText = text.split(":")
+        splitText[0] = 1 + x
+        splitText[1] = float(splitText[1])
         File.write("\n%s" % str(splitText).strip("[]"))
         File.close()
         x += 1
+        print x
 
 updateinfo()
