@@ -15,7 +15,7 @@ ax01 = subplot2grid((2, 2), (0, 0))
 ax02 = subplot2grid((2, 2), (0, 1))
 
 ax01.set_title('BTC - USD')
-ax02.set_title('BTC - Usd 222')
+ax02.set_title('EOS - BTC')
 
 ax01.grid(True)
 ax02.grid(True)
@@ -23,18 +23,13 @@ ax02.grid(True)
 ax01.set_xlabel("Time")
 ax01.set_ylabel("USD")
 ax02.set_xlabel("Time")
-ax02.set_ylabel("USd")
+ax02.set_ylabel("BTC")
 
 BTCUSD=zeros(0)
 EOSBTC=zeros(0)
 t=zeros(0)
 
-p011, = ax01.plot(t,BTCUSD,'b-', label="BTCUSD")
 
-p021, = ax02.plot(t,EOSBTC,'b-', label="EOSBTC")
-
-ax01.legend([p011], [p011.get_label()])
-ax02.legend([p021], [p021.get_label()])
 
 x = 0.0
 
@@ -63,7 +58,7 @@ def updateData(self):
     tmpp1 = yar[-1]
     BTCUSD=append(BTCUSD,tmpp1)
     t=append(t,xar[-1])
-
+    p011, = ax01.plot(t,BTCUSD,'b-', label="1 BTC = %d USD" % float(yar[-1]))
     #EOS TO BTC
     pullData = open("fileEosBtc.txt","r").read()
     dataArray = pullData.split('\n')
@@ -79,12 +74,15 @@ def updateData(self):
             xar.append(int(x))
             yar.append(float(y))
 
+
     ax02.set_ylim( float(min(yar)) - .0005,float(max(yar)) + 0.0005)
     ax02.set_xlim(float(xar[0]),float(xar[-1]) + 1)
     tmpv1 = yar[-1]
     EOSBTC=append(EOSBTC,tmpv1)
+    p021, = ax02.plot(t,EOSBTC,'b-', label="1 EOS = %d BTC"% float(yar[-1]))
 
-
+    ax01.legend([p011], [p011.get_label()])
+    ax02.legend([p021], [p021.get_label()])
     p011.set_data(t,BTCUSD)
     p021.set_data(t,EOSBTC)
 
